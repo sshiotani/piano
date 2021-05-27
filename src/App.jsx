@@ -12,7 +12,7 @@ export const App = () => {
 	return (
 		<div className="App">
 			<div className="Button-Group">
-				return (<Piano keys={keys} ></Piano>)
+				<Piano keys={keys}></Piano>
 			</div>
 		</div>
 	)
