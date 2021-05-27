@@ -1,28 +1,18 @@
 import "./App.css"
 import React, { useState } from "react"
-import {Piano} from "./Components"
+import { Piano } from "./Components"
 
 export const App = () => {
-	const [history, setHistory] = useState([])
-	const [color, setColor] = useState("secondary")
+	const [keyPressed, setKeyPressed] = useState([])
 
 	const keys = ["C", "D", "E", "F", "G", "A", "B"]
 
-	const handleClick = (e) => {
-		//const newHistory = history.push(e)
-		setColor("primary")
-		setTimeout(() => {
-			setColor("secondary")
-		}, 500)
-		//console.log("e", e, newHistory)
-	}
+	// Use click event to update history
 
 	return (
 		<div className="App">
 			<div className="Button-Group">
-					return (
-						<Piano keys={keys}></Piano>
-					)			
+				return (<Piano keys={keys} ></Piano>)
 			</div>
 		</div>
 	)
