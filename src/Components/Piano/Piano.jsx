@@ -1,14 +1,13 @@
-import userEvent from "@testing-library/user-event"
-import React, { Fragment, useState, useEffect, useRef } from "react"
+import React, { Fragment, useState, useEffect } from "react"
 import Button from "react-bootstrap/Button"
+import ButtonGroup from "react-bootstrap/ButtonGroup"
+import "bootstrap/dist/css/bootstrap.min.css"
 import { Key } from "../Key/Key"
 import "./Piano.css"
 
 /**
  * TODO:
  * handle same keys in series
- * style buttons
- * handle long press
  *
  * @param {*} keys
  */
@@ -17,6 +16,15 @@ export const Piano = ({ keys }) => {
 	const [keyState, setKeyState] = useState(keys)
 	const [replay, setReplay] = useState(false)
 	const [replayId, setReplayId] = useState(0)
+	const [validNotes, setValidNotes] = useState([])
+
+	useEffect(() => {
+		const notes = keys.map((key) => {
+			return key.note
+		})
+
+		setValidNotes(notes)
+	}, [])
 
 	useEffect(() => {
 		if (replay === true) {
@@ -70,11 +78,43 @@ export const Piano = ({ keys }) => {
 	}
 
 	const handleReplay = () => {
+		console.log("keysPressed", keyPressed)
 		setReplay(true)
 	}
 
 	const handleReset = () => {
 		setKeyPressed([])
+	}
+
+	const handleSubmit = (event) => {
+		const series = event.target[0].value.split(",")
+		console.log("series", series)
+		setKeyPressed(series)
+		setReplay(true)
+		event.preventDefault()
+	}
+
+	const getInputNote = (input) => {
+		let typedNote = input[input.length - 1].toUpperCase()
+		if (validNotes.includes(typedNote)) return typedNote
+		else return null
+	}
+
+	const handleChange = (e) => {
+		if (e.target.value) {
+			const newNote = getInputNote(e.target.value)
+			if (newNote) {
+				const newInputKeys = e.target.value
+					.toUpperCase()
+					.slice(0, -1)
+					.split(",")
+				newInputKeys.push(newNote)
+				setKeyPressed(newInputKeys)
+			}
+		}
+		else{
+			handleReset()
+		}
 	}
 
 	return (
@@ -94,15 +134,30 @@ export const Piano = ({ keys }) => {
 					)
 				})}
 			</div>
-			<div>
-				<button variant="primary" onClick={handleReplay}>
+			<ButtonGroup>
+				{/* <Button
+					className="m-2"
+					
+					onClick={handleReplay}
+				>
 					Replay
-				</button>{" "}
-				<button variant="primary" onClick={handleReset}>
+				</Button> */}
+				<Button className="m-2" onClick={handleReset}>
 					Reset
-				</button>
-			</div>
-			<div>{keyPressed}</div>
+				</Button>
+			</ButtonGroup>
+
+			<form onSubmit={handleSubmit}>
+				<label>
+					<input
+						type="text"
+						name="Input"
+						value={keyPressed}
+						onChange={handleChange}
+					/>
+				</label>
+				<input type="submit" value="Play" />
+			</form>
 		</div>
 	)
 }

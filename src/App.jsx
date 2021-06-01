@@ -16,7 +16,7 @@ export const App = () => {
 	return (
 		<div className="App">
 			<div className="App-header">Spencer Shiotani Keyboard</div>
-			<div className="Button-Group">
+			<div className="Key-Group">
 				<Piano keys={keys}></Piano>
 			</div>
 		</div>
