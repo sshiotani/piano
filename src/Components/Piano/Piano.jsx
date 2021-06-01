@@ -8,6 +8,7 @@ import "./Piano.css"
 /**
  * TODO:
  * handle same keys in series
+ * add black keys
  *
  * @param {*} keys
  */
@@ -61,6 +62,9 @@ export const Piano = ({ keys }) => {
 		}
 	}
 
+	/** changes the state of the specified key (note and color)
+	 * 
+	 */
 	const changeKeyColor = (note, color) => {
 		let keys = [...keyState]
 		let key = keys.find((x) => x.note === note)
@@ -68,27 +72,45 @@ export const Piano = ({ keys }) => {
 		setKeyState(keys)
 	}
 
+	/**
+	 * Turns the key green when mouse button is clicked
+	 * @param {} note 
+	 */
 	const handleClick = (note) => {
 		setKeyPressed([...keyPressed, note])
 		changeKeyColor(note, "green")
 	}
 
+	/**
+	 * Changes the key back to white after key released
+	 * @param {} note 
+	 */
 	const handleRelease = (note) => {
 		changeKeyColor(note, "white")
 	}
 
+	/**
+	 * resets the recorded key presses
+	 */
 	const handleReset = () => {
 		setKeyPressed([])
 	}
 
+	/**
+	 * takes the series of notes from the input text and replays them 
+	 * @param {*} event 
+	 */
 	const handleSubmit = (event) => {
 		const series = event.target[0].value.split(",")
-		console.log("series", series)
 		setKeyPressed(series)
 		setReplay(true)
 		event.preventDefault()
 	}
 
+	/**
+	 * Validates and returns note from the text input
+	 * @param {*} input 
+	 */
 	const getInputNote = (input) => {
 		let typedNote = input[input.length - 1].toUpperCase()
 		if (validNotes.includes(typedNote)) return typedNote
