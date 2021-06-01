@@ -77,11 +77,6 @@ export const Piano = ({ keys }) => {
 		changeKeyColor(note, "white")
 	}
 
-	const handleReplay = () => {
-		console.log("keysPressed", keyPressed)
-		setReplay(true)
-	}
-
 	const handleReset = () => {
 		setKeyPressed([])
 	}
@@ -100,6 +95,11 @@ export const Piano = ({ keys }) => {
 		else return null
 	}
 
+	/**
+	 * handles adding notes to playlist.
+	 * TODO: handle removing notes
+	 * @param {event} e 
+	 */
 	const handleChange = (e) => {
 		if (e.target.value) {
 			const newNote = getInputNote(e.target.value)
@@ -135,13 +135,6 @@ export const Piano = ({ keys }) => {
 				})}
 			</div>
 			<ButtonGroup>
-				{/* <Button
-					className="m-2"
-					
-					onClick={handleReplay}
-				>
-					Replay
-				</Button> */}
 				<Button className="m-2" onClick={handleReset}>
 					Reset
 				</Button>
