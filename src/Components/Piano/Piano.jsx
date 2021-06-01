@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef, useEffect } from "react"
+import React, { Fragment, useState, useEffect } from "react"
 import { Key } from "../Key/Key"
 import "./Piano.css"
 
@@ -10,7 +10,6 @@ export const Piano = ({ keys }) => {
 
 	useEffect(() => {
 		if (replay === true) {
-			console.log("replay", replay)
 			const play = () => {
 				nextKey(replayId)
 			}
@@ -25,8 +24,7 @@ export const Piano = ({ keys }) => {
 	const nextKey = (id) => {
 		if (id > 0) {
 			const prevNote = keyPressed[id - 1]
-			let prevKey = keyState.find((x) => x.note === prevNote)
-			prevKey.backGround = "White"
+			releaseKey(prevNote)
 		}
 
 		if (id === keyPressed.length) {
@@ -34,15 +32,30 @@ export const Piano = ({ keys }) => {
 			setReplay(false)
 		} else {
 			const note = keyPressed[id]
-			let key = keyState.find((x) => x.note === note)	
-			key.backGround = "blue"
-			setKeyState(keyState)
+			pressKey(note)
 			setReplayId(id + 1)
 		}
 	}
 
-	const handleClick = (key) => {
-		setKeyPressed([...keyPressed, key])
+	const pressKey = (note) => {
+		let key = keyState.find((x) => x.note === note)
+		key.backGround = "blue"
+		setKeyState(keyState)
+	}
+
+	const releaseKey = (note) => {
+		let key = keyState.find((x) => x.note === note)
+		key.backGround = "white"
+		setKeyState(keyState)
+	}
+
+	const handleClick = (note) => {
+		setKeyPressed([...keyPressed, note])
+
+		pressKey(note)
+		setTimeout(() => {
+			releaseKey(note)
+		}, 1000)	
 	}
 
 	const handleReplay = () => {
@@ -69,11 +82,11 @@ export const Piano = ({ keys }) => {
 					)
 				})}
 			</div>
-			<div>{keyPressed}</div>
 			<div>
 				<button onClick={handleReplay}>Replay</button>
 				<button onClick={handleReset}>Reset</button>
 			</div>
+			<div>{keyPressed}</div>
 		</div>
 	)
 }
