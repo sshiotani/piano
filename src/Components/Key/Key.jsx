@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from "react"
 import "./Key.css"
 
-export const Key = ({onClick,note,backGround}) => {
-	const [key, setKey] = useState("white")
-
-	useEffect(() => {
-		setKey(backGround)
-	},[backGround])
-
-	const start = () => {
-        setTimeout(() => {
-            setKey("white")
-        }, 400);
-	}
+export const Key = ({onMouseDown,onMouseUp,note,backGround}) => {
 
 	return (
-		<div onClick={()=>onClick(note)} className={"key"} style={{backgroundColor:key}} onMouseDown={start} >
+		<div className={"key"} style={{backgroundColor:backGround}} onMouseDown={()=>onMouseDown(note)} onMouseUp={()=>onMouseUp(note)} onMouseLeave={()=>onMouseUp(note)}>
 			<div className="note">{note}</div>
 		</div>
 	)

@@ -1,7 +1,17 @@
-import React, { Fragment, useState, useEffect } from "react"
+import userEvent from "@testing-library/user-event"
+import React, { Fragment, useState, useEffect, useRef } from "react"
+import Button from "react-bootstrap/Button"
 import { Key } from "../Key/Key"
 import "./Piano.css"
 
+/**
+ * TODO:
+ * handle same keys in series
+ * style buttons
+ * handle long press
+ *
+ * @param {*} keys
+ */
 export const Piano = ({ keys }) => {
 	const [keyPressed, setKeyPressed] = useState([])
 	const [keyState, setKeyState] = useState(keys)
@@ -21,10 +31,16 @@ export const Piano = ({ keys }) => {
 		}
 	})
 
+	/**
+	 * replay of the pressed keys from id in keyPressed array
+	 * @param {*} id
+	 */
 	const nextKey = (id) => {
+		// set previous played key back to white
+		let prevNote
 		if (id > 0) {
-			const prevNote = keyPressed[id - 1]
-			releaseKey(prevNote)
+			prevNote = keyPressed[id - 1]
+			changeKeyColor(prevNote, "white")
 		}
 
 		if (id === keyPressed.length) {
@@ -32,30 +48,25 @@ export const Piano = ({ keys }) => {
 			setReplay(false)
 		} else {
 			const note = keyPressed[id]
-			pressKey(note)
+			changeKeyColor(note, "red")
 			setReplayId(id + 1)
 		}
 	}
 
-	const pressKey = (note) => {
-		let key = keyState.find((x) => x.note === note)
-		key.backGround = "blue"
-		setKeyState(keyState)
-	}
-
-	const releaseKey = (note) => {
-		let key = keyState.find((x) => x.note === note)
-		key.backGround = "white"
-		setKeyState(keyState)
+	const changeKeyColor = (note, color) => {
+		let keys = [...keyState]
+		let key = keys.find((x) => x.note === note)
+		key.backGround = color
+		setKeyState(keys)
 	}
 
 	const handleClick = (note) => {
 		setKeyPressed([...keyPressed, note])
+		changeKeyColor(note, "green")
+	}
 
-		pressKey(note)
-		setTimeout(() => {
-			releaseKey(note)
-		}, 1000)	
+	const handleRelease = (note) => {
+		changeKeyColor(note, "white")
 	}
 
 	const handleReplay = () => {
@@ -75,7 +86,8 @@ export const Piano = ({ keys }) => {
 							<Key
 								key={id}
 								note={note}
-								onClick={() => handleClick(note)}
+								onMouseDown={() => handleClick(note)}
+								onMouseUp={() => handleRelease(note)}
 								backGround={backGround}
 							></Key>
 						</Fragment>
@@ -83,8 +95,12 @@ export const Piano = ({ keys }) => {
 				})}
 			</div>
 			<div>
-				<button onClick={handleReplay}>Replay</button>
-				<button onClick={handleReset}>Reset</button>
+				<button variant="primary" onClick={handleReplay}>
+					Replay
+				</button>{" "}
+				<button variant="primary" onClick={handleReset}>
+					Reset
+				</button>
 			</div>
 			<div>{keyPressed}</div>
 		</div>
