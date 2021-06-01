@@ -144,9 +144,8 @@ export const Piano = ({ keys }) => {
 			<div className="piano">
 				{keyState.map(({ id, note, backGround }) => {
 					return (
-						<Fragment>
+						<Fragment key={id}>
 							<Key
-								key={id}
 								note={note}
 								onMouseDown={() => handleClick(note)}
 								onMouseUp={() => handleRelease(note)}
