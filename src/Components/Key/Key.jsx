@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import "./Key.css"
 
-export const Key = ({onClick,note}) => {
+export const Key = ({onClick,note,backGround}) => {
 	const [key, setKey] = useState("white")
 
 	const start = () => {
@@ -11,12 +11,13 @@ export const Key = ({onClick,note}) => {
         }, 1000);
 	}
 
+
 	const stop = () => {
 		setKey("white")
 	}
 
 	return (
-		<div onClick={()=>onClick(note)} className={"key"} style={{backgroundColor:key}}  onMouseDown={start} onMouseUp={stop}>
+		<div onClick={()=>onClick(note)} className={"key"} style={{backgroundColor:backGround}} onMouseDown={start} onMouseUp={stop}>
 			<div className="note">{note}</div>
 		</div>
 	)
