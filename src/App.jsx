@@ -13,11 +13,13 @@ export const App = () => {
 		{ id: 7, note: "B", backGround: "white" },
 	]
 
+	const playSpeed = 1000
+
 	return (
 		<div className="App">
 			<div className="App-header">Spencer Shiotani Keyboard</div>
 			<div className="Key-Group">
-				<Piano keys={keys}></Piano>
+				<Piano keys={keys} playSpeed={playSpeed}></Piano>
 			</div>
 		</div>
 	)

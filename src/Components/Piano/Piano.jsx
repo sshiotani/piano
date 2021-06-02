@@ -12,7 +12,7 @@ import "./Piano.css"
  *
  * @param {*} keys
  */
-export const Piano = ({ keys }) => {
+export const Piano = ({ keys, playSpeed }) => {
 	const [keyPressed, setKeyPressed] = useState([])
 	const [keyState, setKeyState] = useState(keys)
 	const [replay, setReplay] = useState(false)
@@ -25,7 +25,7 @@ export const Piano = ({ keys }) => {
 		})
 
 		setValidNotes(notes)
-	}, [])
+	}, [keys])
 
 	useEffect(() => {
 		if (replay === true) {
@@ -33,7 +33,7 @@ export const Piano = ({ keys }) => {
 				nextKey(replayId)
 			}
 
-			const interval = setInterval(play, 1000)
+			const interval = setInterval(play, playSpeed)
 			return () => {
 				clearInterval(interval)
 			}
@@ -46,17 +46,23 @@ export const Piano = ({ keys }) => {
 	 */
 	const nextKey = (id) => {
 		// set previous played key back to white
-		let prevNote
+		const prevNote = keyPressed[id - 1]
+		const note = keyPressed[id]
 		if (id > 0) {
-			prevNote = keyPressed[id - 1]
 			changeKeyColor(prevNote, "white")
 		}
 
 		if (id === keyPressed.length) {
 			setReplayId(0)
 			setReplay(false)
-		} else {
-			const note = keyPressed[id]
+		} else if(note === prevNote) {
+			changeKeyColor(note,"white")
+			setTimeout(() => {
+				changeKeyColor(note, "red")
+			}, playSpeed)
+			setReplayId(id + 1)
+		} else
+		{
 			changeKeyColor(note, "red")
 			setReplayId(id + 1)
 		}
@@ -101,7 +107,7 @@ export const Piano = ({ keys }) => {
 	 * @param {*} event 
 	 */
 	const handleSubmit = (event) => {
-		const series = event.target[0].value.split(",")
+		const series = event.target[0].value.split(",").filter(x=>x)
 		setKeyPressed(series)
 		setReplay(true)
 		event.preventDefault()
